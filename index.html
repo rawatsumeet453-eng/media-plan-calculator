@@ -574,26 +574,44 @@
       return;
     }
 
-    statusEl.textContent = 'Sending...';
-    statusEl.className = 'form-status ok';
+    // Hidden-iframe form POST: this is the most reliable way to send data to a
+    // Google Apps Script web app from a plain static page. Unlike fetch(), a
+    // real <form> submit to a hidden iframe is never blocked by CORS and never
+    // fails silently — the browser just does a normal POST.
+    let iframe = document.getElementById('hiddenSubmitFrame');
+    if (!iframe){
+      iframe = document.createElement('iframe');
+      iframe.name = 'hiddenSubmitFrame';
+      iframe.id = 'hiddenSubmitFrame';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+    }
 
-    fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors', // Apps Script web apps don't return readable CORS response; we assume success on no network error
-      headers: {'Content-Type': 'text/plain;charset=utf-8'},
-      body: JSON.stringify({
-        type: 'crm_interest',
-        name, email, phone, note,
-        timestamp: new Date().toISOString()
-      })
-    }).then(() => {
-      statusEl.textContent = 'Thanks! We\'ll email you shortly.';
-      statusEl.className = 'form-status ok';
-      document.getElementById('interestForm').reset();
-    }).catch(() => {
-      statusEl.textContent = 'Something went wrong — please email us directly.';
-      statusEl.className = 'form-status err';
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = APPS_SCRIPT_URL;
+    form.target = 'hiddenSubmitFrame';
+
+    const fields = {
+      type: 'crm_interest',
+      name, email, phone, note,
+      timestamp: new Date().toISOString()
+    };
+    Object.keys(fields).forEach(key => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = fields[key];
+      form.appendChild(input);
     });
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+
+    statusEl.textContent = 'Thanks! We\'ll email you shortly.';
+    statusEl.className = 'form-status ok';
+    document.getElementById('interestForm').reset();
   }
 </script>
 
