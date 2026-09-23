@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Media Plan Calculator — Real Estate Performance Marketing</title>
+<style>
+  :root{
+    --navy:#0F2A3F;
+    --navy-deep:#0A1D2C;
+    --paper:#F6F4EF;
+    --panel:#FFFFFF;
+    --ink:#1B2530;
+    --ink-soft:#5B6672;
+    --accent:#2F6F6B;
+    --accent-soft:#E4EEED;
+    --line:#DEDAD0;
+    --warn-bg:#FBF3E6;
+    --warn-line:#E3C88A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px 80px;}
+
+  header.hero{
+    background:var(--navy);
+    color:#EFEAE0;
+    padding:56px 24px 44px;
+  }
+  .hero-inner{max-width:920px;margin:0 auto;}
+  .credibility{
+    font-size:13.5px;
+    color:#9FB6C4;
+    margin:0 0 14px;
+    letter-spacing:.2px;
+  }
+  h1{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:clamp(28px,4vw,40px);
+    line-height:1.15;
+    margin:0 0 14px;
+    max-width:14ch;
+    color:#FFFFFF;
+  }
+  .hero-sub{
+    color:#C7D3D8;
+    font-size:16px;
+    max-width:56ch;
+    margin:0;
+  }
+
+  section{margin-top:40px;}
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:28px;
+  }
+  h2{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:21px;
+    margin:0 0 18px;
+    color:var(--navy);
+  }
+  label{
+    display:block;
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  input[type=text], input[type=number], input[type=email]{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    font-size:15px;
+    color:var(--ink);
+    background:#FCFBF9;
+  }
+  input:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .field{margin-bottom:18px;}
+
+  .split-row{display:flex;align-items:center;gap:14px;margin-bottom:6px;}
+  .split-row span{width:100px;font-size:14px;color:var(--ink-soft);}
+  input[type=range]{flex:1;accent-color:var(--accent);}
+  .split-val{width:48px;text-align:right;font-variant-numeric:tabular-nums;font-size:14px;}
+
+  details.bench{margin-top:8px;margin-bottom:20px;}
+  details.bench summary{
+    cursor:pointer;
+    font-size:13.5px;
+    color:var(--accent);
+    font-weight:600;
+  }
+  table.bench-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:13.5px;}
+  table.bench-table th, table.bench-table td{
+    padding:7px 8px;
+    border-bottom:1px solid var(--line);
+    text-align:left;
+  }
+  table.bench-table input{padding:5px 7px;font-size:13px;}
+
+  button.primary{
+    background:var(--navy);
+    color:#fff;
+    border:none;
+    padding:13px 26px;
+    border-radius:4px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    width:100%;
+  }
+  button.primary:hover{background:var(--navy-deep);}
+
+  .results{display:none;}
+  .results.show{display:block;}
+
+  .summary-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:6px;
+    overflow:hidden;
+    margin-bottom:28px;
+  }
+  .summary-cell{background:var(--panel);padding:18px 14px;}
+  .summary-cell .label{font-size:12px;color:var(--ink-soft);margin-bottom:6px;}
+  .summary-cell .value{font-size:22px;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums;}
+
+  table.plan-table{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:10px;}
+  table.plan-table th{
+    text-align:left;
+    padding:9px 10px;
+    background:var(--accent-soft);
+    color:var(--navy);
+    font-weight:600;
+    font-size:12.5px;
+  }
+  table.plan-table td{padding:9px 10px;border-bottom:1px solid var(--line);}
+
+  .disclaimer{
+    background:var(--warn-bg);
+    border:1px solid var(--warn-line);
+    border-radius:5px;
+    padding:16px 18px;
+    font-size:13.5px;
+    color:#5B4A25;
+    margin:24px 0 8px;
+  }
+
+  h3.campaign-h{
+    font-size:16px;
+    color:var(--navy);
+    margin:26px 0 10px;
+    font-family:Georgia,serif;
+  }
+
+  .crosssell{
+    background:var(--navy);
+    color:#EFEAE0;
+    border-radius:6px;
+    padding:32px 28px;
+    margin-top:44px;
+  }
+  .crosssell h2{color:#fff;}
+  .crosssell p{color:#C7D3D8;font-size:14.5px;max-width:62ch;}
+  .crosssell ul{padding-left:18px;margin:18px 0;color:#DCE6E5;}
+  .crosssell li{margin-bottom:8px;font-size:14.5px;}
+  .price-line{
+    font-size:14.5px;
+    color:#EFEAE0;
+    margin:18px 0;
+    padding:12px 14px;
+    background:rgba(255,255,255,0.06);
+    border-radius:4px;
+  }
+  .price-line strong{color:#fff;}
+
+  form.interest-form{margin-top:20px;}
+  form.interest-form .grid2{margin-bottom:14px;}
+  form.interest-form label{color:#AFC0C6;}
+  form.interest-form input, form.interest-form textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid rgba(255,255,255,0.25);
+    border-radius:4px;
+    background:rgba(255,255,255,0.06);
+    color:#fff;
+    font-size:14px;
+  }
+  form.interest-form textarea{resize:vertical;min-height:70px;font-family:inherit;}
+  form.interest-form button{
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    padding:12px 24px;
+    border-radius:4px;
+    font-size:14.5px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  form.interest-form button:hover{background:#255F5B;}
+  .form-note{font-size:12.5px;color:#9FB6C4;margin-top:10px;}
+  .form-status{font-size:13.5px;margin-top:12px;display:none;}
+  .form-status.ok{color:#8FD9C4;display:block;}
+  .form-status.err{color:#E9A7A7;display:block;}
+
+  footer{
+    text-align:center;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-top:50px;
+  }
+
+  @media (max-width:640px){
+    .grid2{grid-template-columns:1fr;}
+    .summary-grid{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="credibility">Built by a performance marketer with 5+ years in lead generation — across Real Estate, Education, and B2B</p>
+    <h1>Turn a budget into a costed media plan in under a minute.</h1>
+    <p class="hero-sub">Set a monthly budget and channel split, get estimated clicks, leads, cost-per-lead, and a ready campaign structure — free, no signup.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="card">
+    <p style="font-size:12.5px;color:var(--ink-soft);background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:5px;padding:10px 14px;margin:0 0 22px;">
+      Note: Numbers below are AI-generated using planning benchmarks, not your live ad account data — treat this as a starting estimate and verify against your actual Meta/Google Ads performance.
+    </p>
+    <h2>Project details</h2>
+    <div class="grid2">
+      <div class="field">
+        <label for="projectName">Project / client name</label>
+        <input type="text" id="projectName" placeholder="e.g. Nirvaan Crest">
+      </div>
+      <div class="field">
+        <label for="pricePoint">Price point (₹)</label>
+        <input type="number" id="pricePoint" placeholder="e.g. 4500000">
+      </div>
+    </div>
+    <div class="field">
+      <label for="budget">Monthly budget (₹)</label>
+      <input type="number" id="budget" placeholder="e.g. 300000">
+    </div>
+
+    <div class="field">
+      <label>Channel split</label>
+      <div class="split-row">
+        <span>Meta</span>
+        <input type="range" id="metaSplit" min="0" max="100" value="90">
+        <span class="split-val" id="metaSplitVal">90%</span>
+      </div>
+      <div class="split-row">
+        <span>Google</span>
+        <input type="range" id="googleSplit" min="0" max="100" value="10" disabled>
+        <span class="split-val" id="googleSplitVal">10%</span>
+      </div>
+    </div>
+
+    <details class="bench">
+      <summary>Adjust benchmarks (edit to match your account)</summary>
+      <table class="bench-table">
+        <thead>
+          <tr><th>Channel</th><th>CTR %</th><th>CPC / CPM ₹</th><th>Conv % (at this price point)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Meta</td>
+            <td><input type="number" id="metaCtr" value="1.1" step="0.1"></td>
+            <td><input type="number" id="metaCpm" value="110" step="1"></td>
+            <td><input type="number" id="metaConv" value="2.4" step="0.1"></td>
+          </tr>
+          <tr>
+            <td>Google Search</td>
+            <td><input type="number" id="googleCtr" value="3.0" step="0.1"></td>
+            <td><input type="number" id="googleCpc" value="22" step="1"></td>
+            <td><input type="number" id="googleConv" value="3.2" step="0.1"></td>
+          </tr>
+        </tbody>
+      </table>
+    </details>
+
+    <button class="primary" onclick="generatePlan()">Generate media plan</button>
+  </section>
+
+  <section class="results" id="resultsSection">
+    <div class="summary-grid" id="summaryGrid"></div>
+
+    <div class="card">
+      <h2>Per-channel media plan</h2>
+      <div id="channelTableWrap"></div>
+
+      <h3 class="campaign-h">Meta campaign structure</h3>
+      <div id="metaCampaignWrap"></div>
+
+      <h3 class="campaign-h">Google campaign structure</h3>
+      <div id="googleCampaignWrap"></div>
+
+      <div class="disclaimer">
+        This media plan and campaign structure is AI-generated using planning benchmarks, not your live ad account data.
+        Numbers can be inaccurate — please cross-check against your actual Meta Ads Manager / Google Ads account
+        performance before using this for client delivery. This tool is meant to help you plan faster, not replace
+        your own account data.
+      </div>
+    </div>
+  </section>
+
+  <section class="crosssell">
+    <h2>Marketer — if you're looking for a Mini CRM Sheet with CAPI, reporting, and WhatsApp automation connected together, this is exactly what I build.</h2>
+    <p>I'm Sumeet, a performance marketer with 5+ years in lead generation — mainly Real Estate, Education, and B2B.
+    A media plan is only useful once it's tracked, so I set up a Mini CRM Sheet with Meta CAPI integration, automated
+    WhatsApp lead follow-up, and reporting — all connected, so every lead this plan generates gets tracked, tagged,
+    and followed up automatically.</p>
+    <ul>
+      <li><strong>Lead CRM Sheet</strong> — auto lead capture, status tracking, no manual entry</li>
+      <li><strong>Meta CAPI setup</strong> — sends better lead-quality signals back to Meta, improves lead quality over time</li>
+      <li><strong>Reporting</strong> — daily/weekly lead and spend reports, no manual pulling of numbers</li>
+      <li><strong>WhatsApp auto-follow-up</strong> — leads contacted within minutes, not hours</li>
+    </ul>
+    <div class="price-line">Setup pricing starts from <strong>₹3,000</strong> and goes up to <strong>₹15,000</strong> depending on scope (CRM only / CRM + CAPI / full CRM + CAPI + WhatsApp automation).</div>
+    <p style="font-size:12.5px;color:#9FB6C4;margin:0 0 18px;">This is indicative pricing — the final quote depends on your project size, number of leads/month, and which pieces (CRM / CAPI / WhatsApp) you actually need. We'll confirm exact pricing on a quick call before any work starts.</p>
+
+    <form class="interest-form" id="interestForm" onsubmit="submitInterest(event)">
+      <div class="grid2">
+        <div>
+          <label for="intName">Your name</label>
+          <input type="text" id="intName" required>
+        </div>
+        <div>
+          <label for="intEmail">Email</label>
+          <input type="email" id="intEmail" required>
+        </div>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label for="intPhone">Phone number</label>
+        <input type="text" id="intPhone" placeholder="10-digit number" required>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label for="intNote">What do you need? (optional)</label>
+        <textarea id="intNote" placeholder="e.g. Just CRM + CAPI for one project"></textarea>
+      </div>
+      <button type="submit">Notify me — I'm interested</button>
+      <div class="form-status" id="formStatus"></div>
+      <p class="form-note">No spam — only about this.</p>
+    </form>
+  </section>
+
+  <footer>Planning defaults are estimates, not live account data. Built for performance marketers.</footer>
+</div>
+
+<script>
+  // ---------- Channel split sliders stay locked to 100% ----------
+  const metaSplit = document.getElementById('metaSplit');
+  const googleSplit = document.getElementById('googleSplit');
+  const metaSplitVal = document.getElementById('metaSplitVal');
+  const googleSplitVal = document.getElementById('googleSplitVal');
+
+  metaSplit.addEventListener('input', () => {
+    const v = parseInt(metaSplit.value, 10);
+    googleSplit.value = 100 - v;
+    metaSplitVal.textContent = v + '%';
+    googleSplitVal.textContent = (100 - v) + '%';
+  });
+
+  // ---------- Formatting helpers ----------
+  function inr(n){
+    if (!isFinite(n)) return '—';
+    return '₹' + Math.round(n).toLocaleString('en-IN');
+  }
+  function num(n){
+    if (!isFinite(n)) return '—';
+    return Math.round(n).toLocaleString('en-IN');
+  }
+
+  // ---------- Core calculation ----------
+  function calcMeta(spend, ctr, cpm, conv){
+    const impressions = cpm > 0 ? (spend / cpm) * 1000 : 0;
+    const clicks = impressions * (ctr / 100);
+    const leads = clicks * (conv / 100);
+    const cpl = leads > 0 ? spend / leads : 0;
+    return {impressions, clicks, leads, cpl, spend};
+  }
+  function calcGoogle(spend, ctr, cpc, conv){
+    const clicks = cpc > 0 ? spend / cpc : 0;
+    const impressions = ctr > 0 ? clicks / (ctr / 100) : 0;
+    const leads = clicks * (conv / 100);
+    const cpl = leads > 0 ? spend / leads : 0;
+    return {impressions, clicks, leads, cpl, spend};
+  }
+
+  // ---------- Campaign structure generator ----------
+  function metaCampaigns(spend, blendedCpl, projectName){
+    const name = (projectName || 'PROJECT').toUpperCase();
+    const scaled = spend >= 200000;
+    const structure = scaled ? [
+      {label:'LocalArea', pct:0.30, audience:'People interested in property (Advantage+ broad, age 25-55)', loc:'3km for project location', type:'Reels & Creatives', mult:1.15},
+      {label:'Lookalike', pct:0.12, audience:'Lookalike 1-3% (seeded from CRM/website converters)', loc:'6km for project location', type:'Reels & Creatives', mult:1.0},
+      {label:'Retargeting', pct:0.12, audience:'People who visited your website in past 30-90 days', loc:'6km for project location', type:'Reels/Video', mult:0.85},
+      {label:'Investor', pct:0.12, audience:'Property investor audience (broad, income-skewed 30-55)', loc:'6km for project location', type:'Reels & Creatives', mult:1.15},
+      {label:'Website', pct:0.12, audience:'Website / landing-page viewers (dynamic retargeting)', loc:'3km for project location', type:'Reels & Creatives', mult:0.85},
+      {label:'BroadLocation', pct:0.22, audience:'People interested in property (broad targeting)', loc:'6km for project location', type:'Reels & Creatives', mult:1.15},
+    ] : [
+      {label:'LocalArea', pct:0.45, audience:'People interested in property (Advantage+ broad, age 25-55)', loc:'3km for project location', type:'Reels & Creatives', mult:1.15},
+      {label:'Lookalike', pct:0.30, audience:'Lookalike 1-3% (seeded from CRM/website converters)', loc:'6km for project location', type:'Reels & Creatives', mult:1.0},
+      {label:'Retargeting', pct:0.25, audience:'People who visited your website in past 30-90 days', loc:'6km for project location', type:'Reels/Video', mult:0.85},
+    ];
+    return structure.map((c, i) => ({
+      sr: i+1,
+      name: `${name}_Meta_${c.label}_${monthTag()}`,
+      dailyBudget: (spend * c.pct) / 30,
+      estCpl: blendedCpl * c.mult,
+      audience: c.audience,
+      loc: c.loc,
+      type: c.type
+    }));
+  }
+
+  function googleCampaigns(spend, blendedCpl, projectName){
+    const name = (projectName || 'PROJECT').toUpperCase();
+    const scaled = spend >= 200000;
+    const structure = scaled ? [
+      {label:'SearchAction', pct:0.50, audience:'Action-oriented keywords (buy, book, price, site visit)', loc:'3km for project location', mult:1.15},
+      {label:'SearchBrand', pct:0.25, audience:'Brand + project name keywords', loc:'6km for project location', mult:0.85},
+      {label:'SearchLocation', pct:0.25, audience:'Location/landmark-based keywords', loc:'6km for project location', mult:1.0},
+    ] : [
+      {label:'SearchAction', pct:0.60, audience:'Action-oriented keywords (buy, book, price, site visit)', loc:'3km for project location', mult:1.15},
+      {label:'SearchBrand', pct:0.40, audience:'Brand + project name keywords', loc:'6km for project location', mult:0.85},
+    ];
+    return structure.map((c, i) => ({
+      sr: i+1,
+      name: `${name}_Google_${c.label}_${monthTag()}`,
+      dailyBudget: (spend * c.pct) / 30,
+      estCpl: blendedCpl * c.mult,
+      audience: c.audience,
+      loc: c.loc,
+      type: 'Search Ads'
+    }));
+  }
+
+  function monthTag(){
+    const d = new Date();
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return months[d.getMonth()] + String(d.getFullYear()).slice(-2);
+  }
+
+  // ---------- Render ----------
+  function generatePlan(){
+    const budget = parseFloat(document.getElementById('budget').value) || 0;
+    const pricePoint = parseFloat(document.getElementById('pricePoint').value) || 0;
+    const projectName = document.getElementById('projectName').value;
+
+    if (budget <= 0){
+      alert('Please enter a monthly budget.');
+      return;
+    }
+
+    const metaPct = parseInt(metaSplit.value, 10) / 100;
+    const googlePct = 1 - metaPct;
+
+    const metaSpend = budget * metaPct;
+    const googleSpend = budget * googlePct;
+
+    const metaCtr = parseFloat(document.getElementById('metaCtr').value) || 0;
+    const metaCpm = parseFloat(document.getElementById('metaCpm').value) || 0;
+    const metaConv = parseFloat(document.getElementById('metaConv').value) || 0;
+
+    const googleCtr = parseFloat(document.getElementById('googleCtr').value) || 0;
+    const googleCpc = parseFloat(document.getElementById('googleCpc').value) || 0;
+    const googleConv = parseFloat(document.getElementById('googleConv').value) || 0;
+
+    const metaResult = metaSpend > 0 ? calcMeta(metaSpend, metaCtr, metaCpm, metaConv) : null;
+    const googleResult = googleSpend > 0 ? calcGoogle(googleSpend, googleCtr, googleCpc, googleConv) : null;
+
+    const totalLeads = (metaResult ? metaResult.leads : 0) + (googleResult ? googleResult.leads : 0);
+    const totalClicks = (metaResult ? metaResult.clicks : 0) + (googleResult ? googleResult.clicks : 0);
+    const blendedCpl = totalLeads > 0 ? budget / totalLeads : 0;
+
+    // Summary cards
+    document.getElementById('summaryGrid').innerHTML = `
+      <div class="summary-cell"><div class="label">Total budget</div><div class="value">${inr(budget)}</div></div>
+      <div class="summary-cell"><div class="label">Est. clicks</div><div class="value">${num(totalClicks)}</div></div>
+      <div class="summary-cell"><div class="label">Est. leads</div><div class="value">${num(totalLeads)}</div></div>
+      <div class="summary-cell"><div class="label">Blended CPL</div><div class="value">${inr(blendedCpl)}</div></div>
+    `;
+
+    // Per-channel table
+    let rows = '';
+    if (metaResult){
+      rows += `<tr>
+        <td>Meta</td><td>${inr(metaResult.spend)}</td><td>${num(metaResult.clicks)}</td>
+        <td>${num(metaResult.impressions)}</td><td>${metaCtr}%</td><td>${inr(metaCpm)} CPM</td>
+        <td>${num(metaResult.leads)}</td><td>${inr(metaResult.cpl)}</td>
+      </tr>`;
+    }
+    if (googleResult){
+      rows += `<tr>
+        <td>Google Search</td><td>${inr(googleResult.spend)}</td><td>${num(googleResult.clicks)}</td>
+        <td>${num(googleResult.impressions)}</td><td>${googleCtr}%</td><td>${inr(googleCpc)} CPC</td>
+        <td>${num(googleResult.leads)}</td><td>${inr(googleResult.cpl)}</td>
+      </tr>`;
+    }
+    document.getElementById('channelTableWrap').innerHTML = `
+      <table class="plan-table">
+        <thead><tr>
+          <th>Channel</th><th>Budget</th><th>Clicks</th><th>Impr.</th><th>CTR</th><th>CPC/CPM</th><th>Leads</th><th>CPL</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+
+    // Campaign structures
+    const metaCamp = metaSpend > 0 ? metaCampaigns(metaSpend, metaResult.cpl, projectName) : [];
+    const googleCamp = googleSpend > 0 ? googleCampaigns(googleSpend, googleResult.cpl, projectName) : [];
+
+    document.getElementById('metaCampaignWrap').innerHTML = campaignTable(metaCamp);
+    document.getElementById('googleCampaignWrap').innerHTML = campaignTable(googleCamp);
+
+    document.getElementById('resultsSection').classList.add('show');
+    document.getElementById('resultsSection').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  function campaignTable(rows){
+    if (!rows.length) return '<p style="font-size:13.5px;color:var(--ink-soft);">No budget allocated to this channel.</p>';
+    const body = rows.map(r => `
+      <tr>
+        <td>${r.sr}</td>
+        <td>${r.name}</td>
+        <td>${inr(r.dailyBudget)}</td>
+        <td>${inr(r.estCpl)}</td>
+        <td>${r.audience}</td>
+        <td>${r.loc}</td>
+        <td>${r.type}</td>
+      </tr>`).join('');
+    return `
+      <table class="plan-table">
+        <thead><tr>
+          <th>Sr.</th><th>Campaign name</th><th>Daily budget</th><th>Est. CPL</th><th>Audience</th><th>Location</th><th>Ad type</th>
+        </tr></thead>
+        <tbody>${body}</tbody>
+      </table>`;
+  }
+
+  // ---------- Cross-sell interest form ----------
+  // Replace this with your deployed Google Apps Script Web App URL (see Code.gs)
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyuXdcsDpnD-vIZRLZab5LJU7EMKs39Tx7ypDEn30quAI9v2b9mlO9UeM3glk9qESCvKw/exec";
+
+  function submitInterest(e){
+    e.preventDefault();
+    const statusEl = document.getElementById('formStatus');
+    const name = document.getElementById('intName').value;
+    const email = document.getElementById('intEmail').value;
+    const phone = document.getElementById('intPhone').value;
+    const note = document.getElementById('intNote').value;
+
+    if (APPS_SCRIPT_URL.includes('PASTE_YOUR')){
+      statusEl.textContent = 'Form not connected yet — add your Apps Script URL in the code.';
+      statusEl.className = 'form-status err';
+      return;
+    }
+
+    statusEl.textContent = 'Sending...';
+    statusEl.className = 'form-status ok';
+
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors', // Apps Script web apps don't return readable CORS response; we assume success on no network error
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify({
+        type: 'crm_interest',
+        name, email, phone, note,
+        timestamp: new Date().toISOString()
+      })
+    }).then(() => {
+      statusEl.textContent = 'Thanks! We\'ll email you shortly.';
+      statusEl.className = 'form-status ok';
+      document.getElementById('interestForm').reset();
+    }).catch(() => {
+      statusEl.textContent = 'Something went wrong — please email us directly.';
+      statusEl.className = 'form-status err';
+    });
+  }
+</script>
+
+</body>
+</html>
