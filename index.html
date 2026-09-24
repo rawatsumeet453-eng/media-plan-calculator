@@ -74,7 +74,7 @@
     color:var(--ink-soft);
     margin-bottom:6px;
   }
-  input[type=text], input[type=number], input[type=email]{
+  input[type=text], input[type=number], input[type=email], select{
     width:100%;
     padding:10px 12px;
     border:1px solid var(--line);
@@ -83,6 +83,7 @@
     color:var(--ink);
     background:#FCFBF9;
   }
+  select{cursor:pointer;}
   input:focus{outline:2px solid var(--accent);outline-offset:1px;}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
   .field{margin-bottom:18px;}
@@ -119,6 +120,37 @@
     width:100%;
   }
   button.primary:hover{background:var(--navy-deep);}
+
+  .cta-banner{
+    background:var(--accent-soft);
+    border:1px solid var(--line);
+    border-left:4px solid var(--accent);
+    border-radius:6px;
+    padding:16px 20px;
+    margin-top:28px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .cta-banner p{
+    margin:0;
+    font-size:14.5px;
+    color:var(--navy);
+  }
+  .cta-banner p strong{color:var(--accent);}
+  .cta-banner a.cta-link{
+    background:var(--navy);
+    color:#fff;
+    text-decoration:none;
+    padding:9px 18px;
+    border-radius:4px;
+    font-size:13.5px;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .cta-banner a.cta-link:hover{background:var(--navy-deep);}
 
   .results{display:none;}
   .results.show{display:block;}
@@ -239,19 +271,53 @@
 </header>
 
 <div class="wrap">
+  <p style="text-align:center;font-size:14px;color:var(--ink-soft);margin:20px 0 0;">
+    Already running ads? Get a Mini CRM Sheet with Meta CAPI, reporting, and WhatsApp automation — so every lead this plan generates gets tracked. For more details, email me at <a href="mailto:rawatsumeet453@gmail.com" style="color:var(--accent);">rawatsumeet453@gmail.com</a>.
+  </p>
 
   <section class="card">
     <p style="font-size:12.5px;color:var(--ink-soft);background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:5px;padding:10px 14px;margin:0 0 22px;">
       Note: Numbers below are AI-generated using planning benchmarks, not your live ad account data — treat this as a starting estimate and verify against your actual Meta/Google Ads performance.
     </p>
     <h2>Project details</h2>
+    <div class="field">
+      <label for="goal">Goal</label>
+      <select id="goal" onchange="onGoalChange()">
+        <option value="leadgen">Lead Generation</option>
+        <option value="branding">Branding / Awareness</option>
+      </select>
+    </div>
+
+    <div id="leadGenFields">
+    <div class="field">
+      <label for="sector">Sector</label>
+      <select id="sector" onchange="onSectorChange()">
+        <option value="realestate">Real Estate</option>
+        <option value="education">Education</option>
+        <option value="btob">B2B</option>
+        <option value="entertainment">Entertainment</option>
+      </select>
+    </div>
+    <div class="field" id="eduTypeField" style="display:none;">
+      <label for="eduType">Education type</label>
+      <select id="eduType" onchange="applyIndustryDefaults()">
+        <option value="preschool">Preschool</option>
+        <option value="mba">MBA</option>
+        <option value="entranceexam">Entrance Exam Coaching</option>
+      </select>
+    </div>
+    <div class="field" id="locationField" style="display:none;">
+      <label for="location">Location (Mumbai)</label>
+      <select id="location"></select>
+    </div>
+    </div>
     <div class="grid2">
       <div class="field">
         <label for="projectName">Project / client name</label>
         <input type="text" id="projectName" placeholder="e.g. Nirvaan Crest">
       </div>
       <div class="field">
-        <label for="pricePoint">Price point (₹)</label>
+        <label for="pricePoint" id="pricePointLabel">Price point (₹)</label>
         <input type="number" id="pricePoint" placeholder="e.g. 4500000">
       </div>
     </div>
@@ -298,6 +364,75 @@
     </details>
 
     <button class="primary" onclick="generatePlan()">Generate media plan</button>
+    </div>
+
+    <div id="brandingFields" style="display:none;">
+      <div class="field">
+        <label for="brandName">Project / brand name</label>
+        <input type="text" id="brandName" placeholder="e.g. Nirvaan Crest">
+      </div>
+      <div class="field">
+        <label for="brandBudget">Monthly budget (₹)</label>
+        <input type="number" id="brandBudget" placeholder="e.g. 300000">
+      </div>
+
+      <div class="field">
+        <label>Channel split</label>
+        <div class="split-row">
+          <span>Meta</span>
+          <input type="range" id="brandMetaSplit" min="0" max="100" value="50">
+          <span class="split-val" id="brandMetaSplitVal">50%</span>
+        </div>
+        <div class="split-row">
+          <span>Display</span>
+          <input type="range" id="brandDisplaySplit" min="0" max="100" value="25">
+          <span class="split-val" id="brandDisplaySplitVal">25%</span>
+        </div>
+        <div class="split-row">
+          <span>YouTube</span>
+          <input type="range" id="brandYoutubeSplit" min="0" max="100" value="25" disabled>
+          <span class="split-val" id="brandYoutubeSplitVal">25%</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="targetFreq">Target frequency (times a person sees the ad)</label>
+        <input type="number" id="targetFreq" value="3.5" step="0.1">
+      </div>
+
+      <details class="bench">
+        <summary>Adjust CPM benchmarks (universal — same for every sector)</summary>
+        <table class="bench-table">
+          <thead>
+            <tr><th>Channel</th><th>CPM ₹ (cost per 1,000 impressions)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Meta</td><td><input type="number" id="brandMetaCpm" value="120" step="1"></td></tr>
+            <tr><td>Google Display</td><td><input type="number" id="brandDisplayCpm" value="90" step="1"></td></tr>
+            <tr><td>YouTube</td><td><input type="number" id="brandYoutubeCpm" value="150" step="1"></td></tr>
+          </tbody>
+        </table>
+      </details>
+
+      <button class="primary" onclick="generateBrandingPlan()">Generate branding plan</button>
+    </div>
+  </section>
+
+  <section class="results" id="brandingResultsSection" style="display:none;">
+    <div class="summary-grid" id="brandingSummaryGrid"></div>
+    <div class="card">
+      <h2>Per-channel branding plan</h2>
+      <div id="brandingChannelTableWrap"></div>
+
+      <h3 class="campaign-h">Awareness campaign structure</h3>
+      <div id="brandingCampaignWrap"></div>
+
+      <div class="disclaimer">
+        These are planning estimates using flat CPM benchmarks, the same for every sector — not your live ad account
+        data. Reach is estimated as impressions ÷ target frequency, which is a simplification (real reach curves are
+        not linear). Verify against your actual Ads Manager / Google Ads data before using this for client delivery.
+      </div>
+    </div>
   </section>
 
   <section class="results" id="resultsSection">
@@ -322,7 +457,7 @@
     </div>
   </section>
 
-  <section class="crosssell">
+  <section class="crosssell" id="crosssell">
     <h2>Marketer — if you're looking for a Mini CRM Sheet with CAPI, reporting, and WhatsApp automation connected together, this is exactly what I build.</h2>
     <p>I'm Sumeet, a performance marketer with 5+ years in lead generation — mainly Real Estate, Education, and B2B.
     A media plan is only useful once it's tracked, so I set up a Mini CRM Sheet with Meta CAPI integration, automated
@@ -379,6 +514,85 @@
     googleSplitVal.textContent = (100 - v) + '%';
   });
 
+  // ---------- Branding: 3-way split (Meta / Display / YouTube), Meta+Display are draggable, YouTube is the remainder ----------
+  const brandMetaSplit = document.getElementById('brandMetaSplit');
+  const brandDisplaySplit = document.getElementById('brandDisplaySplit');
+  const brandYoutubeSplit = document.getElementById('brandYoutubeSplit');
+  const brandMetaSplitVal = document.getElementById('brandMetaSplitVal');
+  const brandDisplaySplitVal = document.getElementById('brandDisplaySplitVal');
+  const brandYoutubeSplitVal = document.getElementById('brandYoutubeSplitVal');
+
+  function rebalanceBrandSplit(changed){
+    let m = parseInt(brandMetaSplit.value, 10);
+    let d = parseInt(brandDisplaySplit.value, 10);
+    if (m + d > 100){
+      if (changed === 'meta') d = 100 - m;
+      else m = 100 - d;
+      brandMetaSplit.value = m;
+      brandDisplaySplit.value = d;
+    }
+    const y = 100 - m - d;
+    brandYoutubeSplit.value = y;
+    brandMetaSplitVal.textContent = m + '%';
+    brandDisplaySplitVal.textContent = d + '%';
+    brandYoutubeSplitVal.textContent = y + '%';
+  }
+  brandMetaSplit.addEventListener('input', () => rebalanceBrandSplit('meta'));
+  brandDisplaySplit.addEventListener('input', () => rebalanceBrandSplit('display'));
+
+  // ---------- Real Estate price-bracket table (from real Mumbai RE benchmark sheet) ----------
+  // CTR is flat across all brackets: Meta 0.75% (CPM buy), Google Search 8.00% (CPC buy).
+  // Conv% and CPC/CPM change per bracket — this is what the calculator was missing before.
+  const REAL_ESTATE_BRACKETS = [
+    {upper: 2000000,    metaConv: 20.0, metaCpm: 200, searchConv: 8.0, searchCpc: 30},
+    {upper: 5000000,    metaConv: 12.5, metaCpm: 250, searchConv: 6.0, searchCpc: 38},
+    {upper: 9000000,    metaConv: 9.0,  metaCpm: 300, searchConv: 6.0, searchCpc: 43},
+    {upper: 19000000,   metaConv: 8.0,  metaCpm: 320, searchConv: 5.0, searchCpc: 45},
+    {upper: 20000000,   metaConv: 7.0,  metaCpm: 400, searchConv: 5.0, searchCpc: 65},
+    {upper: 40000000,   metaConv: 3.0,  metaCpm: 450, searchConv: 3.0, searchCpc: 125},
+    {upper: 60000000,   metaConv: 2.6,  metaCpm: 450, searchConv: 3.0, searchCpc: 160},
+    {upper: 90000000,   metaConv: 2.0,  metaCpm: 500, searchConv: 3.5, searchCpc: 195},
+    {upper: Infinity,   metaConv: 1.0,  metaCpm: 600, searchConv: 3.0, searchCpc: 230},
+  ];
+
+  // ---------- Mumbai top-area CPL premium (Real Estate only) ----------
+  const LOCATION_MULTIPLIERS = {
+    'standard': {label: 'Other Mumbai / Standard location', mult: 1.00},
+    'bandrawest': {label: 'Bandra West', mult: 1.02},
+    'bandraeast': {label: 'Bandra East', mult: 1.02},
+    'juhu': {label: 'Juhu', mult: 1.02},
+    'worli': {label: 'Worli', mult: 1.02},
+    'bkc': {label: 'BKC', mult: 1.02},
+    'powai': {label: 'Powai', mult: 1.02},
+    'lowerparel': {label: 'Lower Parel', mult: 1.02},
+    'malabarhill': {label: 'Malabar Hill', mult: 1.02},
+    'kharwest': {label: 'Khar West', mult: 1.02},
+    'colaba': {label: 'Colaba', mult: 1.02},
+  };
+  const REALESTATE_META_CTR = 0.75;
+  const REALESTATE_SEARCH_CTR = 8.00;
+
+  function getRealEstateBracket(pricePoint){
+    for (const b of REAL_ESTATE_BRACKETS){
+      if (pricePoint <= b.upper) return b;
+    }
+    return REAL_ESTATE_BRACKETS[REAL_ESTATE_BRACKETS.length - 1];
+  }
+
+  function applyRealEstateBracket(){
+    if (getSelectedIndustryKey() !== 'realestate') return;
+    const pricePoint = parseFloat(document.getElementById('pricePoint').value) || 0;
+    const b = pricePoint > 0 ? getRealEstateBracket(pricePoint) : REAL_ESTATE_BRACKETS[0];
+    document.getElementById('metaCtr').value = REALESTATE_META_CTR;
+    document.getElementById('metaCpm').value = b.metaCpm;
+    document.getElementById('metaConv').value = b.metaConv;
+    document.getElementById('googleCtr').value = REALESTATE_SEARCH_CTR;
+    document.getElementById('googleCpc').value = b.searchCpc;
+    document.getElementById('googleConv').value = b.searchConv;
+  }
+
+  document.getElementById('pricePoint').addEventListener('input', applyRealEstateBracket);
+
   // ---------- Formatting helpers ----------
   function inr(n){
     if (!isFinite(n)) return '—';
@@ -405,22 +619,244 @@
     return {impressions, clicks, leads, cpl, spend};
   }
 
-  // ---------- Campaign structure generator ----------
-  function metaCampaigns(spend, blendedCpl, projectName){
+  // ---------- Industry catalogs: each industry has its own benchmark defaults
+  // and its own Meta + Google campaign structure (base = under ₹2L/platform/month,
+  // scaled = ₹2L+/platform/month, more ad sets unlock). ----------
+  const INDUSTRY_CATALOGS = {
+    realestate: {
+      pricePointLabel: 'Price point (₹)',
+      bench: {metaCtr:1.1, metaCpm:110, metaConv:2.4, googleCtr:3.0, googleCpc:22, googleConv:3.2},
+      meta: {
+        scaled: [
+          {label:'LocalArea', pct:0.30, audience:'People interested in property (Advantage+ broad, age 25-55)', loc:'3km for project location', type:'Reels & Creatives', mult:1.15},
+          {label:'Lookalike', pct:0.12, audience:'Lookalike 1-3% (seeded from CRM/website converters)', loc:'6km for project location', type:'Reels & Creatives', mult:1.0},
+          {label:'Retargeting', pct:0.12, audience:'People who visited your website in past 30-90 days', loc:'6km for project location', type:'Reels/Video', mult:0.85},
+          {label:'Investor', pct:0.12, audience:'Property investor audience (broad, income-skewed 30-55)', loc:'6km for project location', type:'Reels & Creatives', mult:1.15},
+          {label:'Website', pct:0.12, audience:'Website / landing-page viewers (dynamic retargeting)', loc:'3km for project location', type:'Reels & Creatives', mult:0.85},
+          {label:'BroadLocation', pct:0.22, audience:'People interested in property (broad targeting)', loc:'6km for project location', type:'Reels & Creatives', mult:1.15},
+        ],
+        base: [
+          {label:'LocalArea', pct:0.45, audience:'People interested in property (Advantage+ broad, age 25-55)', loc:'3km for project location', type:'Reels & Creatives', mult:1.15},
+          {label:'Lookalike', pct:0.30, audience:'Lookalike 1-3% (seeded from CRM/website converters)', loc:'6km for project location', type:'Reels & Creatives', mult:1.0},
+          {label:'Retargeting', pct:0.25, audience:'People who visited your website in past 30-90 days', loc:'6km for project location', type:'Reels/Video', mult:0.85},
+        ]
+      },
+      google: {
+        scaled: [
+          {label:'SearchAction', pct:0.50, audience:'Action-oriented keywords (buy, book, price, site visit)', loc:'3km for project location', mult:1.15},
+          {label:'SearchBrand', pct:0.25, audience:'Brand + project name keywords', loc:'6km for project location', mult:0.85},
+          {label:'SearchLocation', pct:0.25, audience:'Location/landmark-based keywords', loc:'6km for project location', mult:1.0},
+        ],
+        base: [
+          {label:'SearchAction', pct:0.60, audience:'Action-oriented keywords (buy, book, price, site visit)', loc:'3km for project location', mult:1.15},
+          {label:'SearchBrand', pct:0.40, audience:'Brand + project name keywords', loc:'6km for project location', mult:0.85},
+        ]
+      }
+    },
+    preschool: {
+      pricePointLabel: 'Annual fee (₹)',
+      bench: {metaCtr:1.8, metaCpm:100, metaConv:2.8, googleCtr:6.5, googleCpc:35, googleConv:7.0},
+      meta: {
+        scaled: [
+          {label:'LocalParents', pct:0.30, audience:'Parents aged 25-40 near school (Advantage+ broad, 3-5km)', loc:'3km for school location', type:'Reels & Creatives', mult:1.15},
+          {label:'Lookalike', pct:0.12, audience:'Lookalike 1-3% (seeded from enrolled-parent CRM)', loc:'5km for school location', type:'Reels & Creatives', mult:1.0},
+          {label:'Retargeting', pct:0.12, audience:'People who visited website / started enquiry form', loc:'5km for school location', type:'Reels/Video', mult:0.8},
+          {label:'WorkingParents', pct:0.12, audience:'Working-parent audience, dual-income households (broad)', loc:'5km for school location', type:'Reels & Creatives', mult:1.15},
+          {label:'CampusTourRT', pct:0.12, audience:'People who watched 50%+ of campus-tour video', loc:'5km for school location', type:'Reels/Video', mult:0.85},
+          {label:'BroadLocal', pct:0.22, audience:'Broad parenting/preschool interest audience', loc:'5km for school location', type:'Reels & Creatives', mult:1.15},
+        ],
+        base: [
+          {label:'LocalParents', pct:0.45, audience:'Parents aged 25-40 near school (Advantage+ broad, 3-5km)', loc:'3km for school location', type:'Reels & Creatives', mult:1.15},
+          {label:'Lookalike', pct:0.30, audience:'Lookalike 1-3% (seeded from enrolled-parent CRM)', loc:'5km for school location', type:'Reels & Creatives', mult:1.0},
+          {label:'Retargeting', pct:0.25, audience:'People who visited website / started enquiry form', loc:'5km for school location', type:'Reels/Video', mult:0.8},
+        ]
+      },
+      google: {
+        scaled: [
+          {label:'SearchAction', pct:0.50, audience:'Action keywords ("preschool near me", "admission open", "fees")', loc:'3-5km for school location', mult:1.15},
+          {label:'SearchBrand', pct:0.25, audience:'Brand + school name keywords', loc:'City-wide', mult:0.8},
+          {label:'SearchLocation', pct:0.25, audience:'Locality/landmark-based keywords', loc:'5km for school location', mult:1.0},
+        ],
+        base: [
+          {label:'SearchAction', pct:0.60, audience:'Action keywords ("preschool near me", "admission open", "fees")', loc:'3-5km for school location', mult:1.15},
+          {label:'SearchBrand', pct:0.40, audience:'Brand + school name keywords', loc:'City-wide', mult:0.8},
+        ]
+      }
+    },
+    mba: {
+      pricePointLabel: 'Program fee (₹)',
+      bench: {metaCtr:1.3, metaCpm:130, metaConv:2.9, googleCtr:5.5, googleCpc:90, googleConv:6.0},
+      meta: {
+        scaled: [
+          {label:'WorkingProfessionals', pct:0.28, audience:'Working professionals 22-38, interest in career growth (broad)', loc:'Target cities / Pan-India', type:'Static & Carousel', mult:1.15},
+          {label:'Lookalike', pct:0.14, audience:'Lookalike 1-3% (seeded from enrolled students/CRM)', loc:'Target cities / Pan-India', type:'Static & Carousel', mult:1.0},
+          {label:'Retargeting', pct:0.14, audience:'Website visitors / brochure downloaders (30-90 days)', loc:'Pan-India', type:'Static/Video', mult:0.8},
+          {label:'CareerSwitchers', pct:0.14, audience:'People exploring career switch / upskilling (broad, 25-40)', loc:'Target cities', type:'Static & Carousel', mult:1.15},
+          {label:'WebinarRT', pct:0.10, audience:'People who registered/attended info session or webinar', loc:'Pan-India', type:'Video', mult:0.85},
+          {label:'BroadCareer', pct:0.20, audience:'Broad interest in MBA / management education', loc:'Pan-India', type:'Static & Carousel', mult:1.15},
+        ],
+        base: [
+          {label:'WorkingProfessionals', pct:0.45, audience:'Working professionals 22-38, interest in career growth (broad)', loc:'Target cities / Pan-India', type:'Static & Carousel', mult:1.15},
+          {label:'Lookalike', pct:0.30, audience:'Lookalike 1-3% (seeded from enrolled students/CRM)', loc:'Target cities / Pan-India', type:'Static & Carousel', mult:1.0},
+          {label:'Retargeting', pct:0.25, audience:'Website visitors / brochure downloaders (30-90 days)', loc:'Pan-India', type:'Static/Video', mult:0.8},
+        ]
+      },
+      google: {
+        scaled: [
+          {label:'SearchAction', pct:0.50, audience:'High-intent keywords ("MBA admission 2027", "apply now", "fees")', loc:'Target cities', mult:1.15},
+          {label:'SearchBrand', pct:0.25, audience:'Brand + program name keywords', loc:'Pan-India', mult:0.8},
+          {label:'SearchCompetitor', pct:0.25, audience:'Competitor B-school / "alternative to" keywords', loc:'Pan-India', mult:1.2},
+        ],
+        base: [
+          {label:'SearchAction', pct:0.60, audience:'High-intent keywords ("MBA admission 2027", "apply now", "fees")', loc:'Target cities', mult:1.15},
+          {label:'SearchBrand', pct:0.40, audience:'Brand + program name keywords', loc:'Pan-India', mult:0.8},
+        ]
+      }
+    },
+    entranceexam: {
+      pricePointLabel: 'Course fee (₹)',
+      bench: {metaCtr:1.4, metaCpm:120, metaConv:2.6, googleCtr:6.0, googleCpc:38, googleConv:8.5},
+      meta: {
+        scaled: [
+          {label:'ExamAspirants', pct:0.28, audience:'Students 15-25 interested in target exam (JEE/NEET/CAT/CLAT etc.)', loc:'Target cities / Pan-India', type:'Reels & Creatives', mult:1.15},
+          {label:'Lookalike', pct:0.12, audience:'Lookalike 1-3% (seeded from enrolled-student CRM)', loc:'Target cities / Pan-India', type:'Reels & Creatives', mult:1.0},
+          {label:'Retargeting', pct:0.12, audience:'People who visited website / started free-class signup', loc:'Pan-India', type:'Reels/Video', mult:0.8},
+          {label:'ParentsBroad', pct:0.12, audience:'Parents of exam-age students (broad, 40-55)', loc:'Target cities', type:'Reels & Creatives', mult:1.15},
+          {label:'WebinarRT', pct:0.12, audience:'People who attended free demo class / webinar', loc:'Pan-India', type:'Reels/Video', mult:0.85},
+          {label:'BroadExam', pct:0.24, audience:'Broad interest in competitive exam preparation', loc:'Pan-India', type:'Reels & Creatives', mult:1.15},
+        ],
+        base: [
+          {label:'ExamAspirants', pct:0.45, audience:'Students 15-25 interested in target exam (JEE/NEET/CAT/CLAT etc.)', loc:'Target cities / Pan-India', type:'Reels & Creatives', mult:1.15},
+          {label:'Lookalike', pct:0.30, audience:'Lookalike 1-3% (seeded from enrolled-student CRM)', loc:'Target cities / Pan-India', type:'Reels & Creatives', mult:1.0},
+          {label:'Retargeting', pct:0.25, audience:'People who visited website / started free-class signup', loc:'Pan-India', type:'Reels/Video', mult:0.8},
+        ]
+      },
+      google: {
+        scaled: [
+          {label:'SearchAction', pct:0.50, audience:'Action keywords ("[exam] coaching near me", "batch admission")', loc:'Target cities', mult:1.15},
+          {label:'SearchBrand', pct:0.25, audience:'Brand + institute name keywords', loc:'Pan-India', mult:0.8},
+          {label:'SearchCity', pct:0.25, audience:'City/locality-based exam-coaching keywords', loc:'Target cities', mult:1.0},
+        ],
+        base: [
+          {label:'SearchAction', pct:0.60, audience:'Action keywords ("[exam] coaching near me", "batch admission")', loc:'Target cities', mult:1.15},
+          {label:'SearchBrand', pct:0.40, audience:'Brand + institute name keywords', loc:'Pan-India', mult:0.8},
+        ]
+      }
+    },
+    btob: {
+      pricePointLabel: 'Average deal size (₹)',
+      bench: {metaCtr:0.9, metaCpm:140, metaConv:1.6, googleCtr:2.8, googleCpc:35, googleConv:2.2},
+      meta: {
+        scaled: [
+          {label:'DecisionMaker', pct:0.28, audience:'Job-title / industry interest targeting (broad, decision-makers)', loc:'Target geography', type:'Static & Carousel', mult:1.15},
+          {label:'Lookalike', pct:0.14, audience:'Lookalike 1-3% (seeded from converted leads/CRM)', loc:'Target geography', type:'Static & Carousel', mult:1.0},
+          {label:'Retargeting', pct:0.14, audience:'Website visitors / demo page viewers (30-90 days)', loc:'Target geography', type:'Static/Video', mult:0.85},
+          {label:'CaseStudyRT', pct:0.14, audience:'People who watched case-study / explainer video', loc:'Target geography', type:'Video', mult:0.85},
+          {label:'IndustryBroad', pct:0.10, audience:'Broad interest in relevant industry/software category', loc:'Target geography', type:'Static & Carousel', mult:1.2},
+          {label:'Retarget-Engaged', pct:0.20, audience:'Page/post engagers, form-starters who did not submit', loc:'Target geography', type:'Static', mult:0.9},
+        ],
+        base: [
+          {label:'DecisionMaker', pct:0.45, audience:'Job-title / industry interest targeting (broad, decision-makers)', loc:'Target geography', type:'Static & Carousel', mult:1.15},
+          {label:'Lookalike', pct:0.30, audience:'Lookalike 1-3% (seeded from converted leads/CRM)', loc:'Target geography', type:'Static & Carousel', mult:1.0},
+          {label:'Retargeting', pct:0.25, audience:'Website visitors / demo page viewers (30-90 days)', loc:'Target geography', type:'Static/Video', mult:0.85},
+        ]
+      },
+      google: {
+        scaled: [
+          {label:'SearchAction', pct:0.50, audience:'High-intent solution keywords (software/service + "for business")', loc:'Target geography', mult:1.15},
+          {label:'SearchBrand', pct:0.25, audience:'Brand + product name keywords', loc:'Target geography', mult:0.85},
+          {label:'SearchCompetitor', pct:0.25, audience:'Competitor / "alternative to" keywords', loc:'Target geography', mult:1.2},
+        ],
+        base: [
+          {label:'SearchAction', pct:0.60, audience:'High-intent solution keywords (software/service + "for business")', loc:'Target geography', mult:1.15},
+          {label:'SearchBrand', pct:0.40, audience:'Brand + product name keywords', loc:'Target geography', mult:0.85},
+        ]
+      }
+    },
+    entertainment: {
+      pricePointLabel: 'Ticket price (₹)',
+      bench: {metaCtr:1.6, metaCpm:105, metaConv:3.5, googleCtr:3.2, googleCpc:16, googleConv:3.8},
+      meta: {
+        scaled: [
+          {label:'LocalAwareness', pct:0.30, audience:'People near venue/city (Advantage+ broad, age 18-45)', loc:'Event city radius', type:'Reels & Creatives', mult:1.15},
+          {label:'Lookalike', pct:0.12, audience:'Lookalike 1-3% (seeded from past ticket buyers)', loc:'Event city radius', type:'Reels & Creatives', mult:1.0},
+          {label:'Retargeting', pct:0.12, audience:'People who visited event page / started checkout', loc:'Event city radius', type:'Reels/Video', mult:0.8},
+          {label:'GenreFans', pct:0.12, audience:'Genre/artist/category interest audience (broad)', loc:'Event city radius', type:'Reels & Creatives', mult:1.15},
+          {label:'VideoViewsRT', pct:0.12, audience:'People who watched 50%+ of teaser/trailer video', loc:'Event city radius', type:'Reels/Video', mult:0.85},
+          {label:'BroadInterest', pct:0.22, audience:'Broad entertainment/events interest audience', loc:'Event city radius', type:'Reels & Creatives', mult:1.15},
+        ],
+        base: [
+          {label:'LocalAwareness', pct:0.45, audience:'People near venue/city (Advantage+ broad, age 18-45)', loc:'Event city radius', type:'Reels & Creatives', mult:1.15},
+          {label:'Lookalike', pct:0.30, audience:'Lookalike 1-3% (seeded from past ticket buyers)', loc:'Event city radius', type:'Reels & Creatives', mult:1.0},
+          {label:'Retargeting', pct:0.25, audience:'People who visited event page / started checkout', loc:'Event city radius', type:'Reels/Video', mult:0.8},
+        ]
+      },
+      google: {
+        scaled: [
+          {label:'SearchAction', pct:0.55, audience:'Action keywords (buy tickets, book now, show dates)', loc:'Event city radius', mult:1.15},
+          {label:'SearchBrand', pct:0.25, audience:'Brand + event/show name keywords', loc:'Pan-India', mult:0.8},
+          {label:'SearchVenue', pct:0.20, audience:'Venue / landmark based keywords', loc:'Event city radius', mult:1.0},
+        ],
+        base: [
+          {label:'SearchAction', pct:0.65, audience:'Action keywords (buy tickets, book now, show dates)', loc:'Event city radius', mult:1.15},
+          {label:'SearchBrand', pct:0.35, audience:'Brand + event/show name keywords', loc:'Pan-India', mult:0.8},
+        ]
+      }
+    }
+  };
+
+  function onGoalChange(){
+    const goal = document.getElementById('goal').value;
+    document.getElementById('leadGenFields').style.display = (goal === 'leadgen') ? 'block' : 'none';
+    document.getElementById('brandingFields').style.display = (goal === 'branding') ? 'block' : 'none';
+    document.getElementById('resultsSection').classList.remove('show');
+    document.getElementById('brandingResultsSection').style.display = 'none';
+  }
+
+  function onSectorChange(){
+    const sector = document.getElementById('sector').value;
+    const eduField = document.getElementById('eduTypeField');
+    const locField = document.getElementById('locationField');
+    eduField.style.display = (sector === 'education') ? 'block' : 'none';
+    locField.style.display = (sector === 'realestate') ? 'block' : 'none';
+    applyIndustryDefaults();
+    applyRealEstateBracket();
+  }
+
+  function populateLocationDropdown(){
+    const sel = document.getElementById('location');
+    sel.innerHTML = '';
+    Object.keys(LOCATION_MULTIPLIERS).forEach(key => {
+      const opt = document.createElement('option');
+      opt.value = key;
+      opt.textContent = LOCATION_MULTIPLIERS[key].label;
+      sel.appendChild(opt);
+    });
+  }
+
+  function getSelectedIndustryKey(){
+    const sector = document.getElementById('sector').value;
+    if (sector === 'education') return document.getElementById('eduType').value;
+    return sector;
+  }
+
+  function applyIndustryDefaults(){
+    const industry = getSelectedIndustryKey();
+    const cat = INDUSTRY_CATALOGS[industry];
+    document.getElementById('pricePointLabel').textContent = cat.pricePointLabel;
+    document.getElementById('metaCtr').value = cat.bench.metaCtr;
+    document.getElementById('metaCpm').value = cat.bench.metaCpm;
+    document.getElementById('metaConv').value = cat.bench.metaConv;
+    document.getElementById('googleCtr').value = cat.bench.googleCtr;
+    document.getElementById('googleCpc').value = cat.bench.googleCpc;
+    document.getElementById('googleConv').value = cat.bench.googleConv;
+  }
+
+  // ---------- Campaign structure generator (industry-aware) ----------
+  function metaCampaigns(spend, blendedCpl, projectName, industry){
     const name = (projectName || 'PROJECT').toUpperCase();
     const scaled = spend >= 200000;
-    const structure = scaled ? [
-      {label:'LocalArea', pct:0.30, audience:'People interested in property (Advantage+ broad, age 25-55)', loc:'3km for project location', type:'Reels & Creatives', mult:1.15},
-      {label:'Lookalike', pct:0.12, audience:'Lookalike 1-3% (seeded from CRM/website converters)', loc:'6km for project location', type:'Reels & Creatives', mult:1.0},
-      {label:'Retargeting', pct:0.12, audience:'People who visited your website in past 30-90 days', loc:'6km for project location', type:'Reels/Video', mult:0.85},
-      {label:'Investor', pct:0.12, audience:'Property investor audience (broad, income-skewed 30-55)', loc:'6km for project location', type:'Reels & Creatives', mult:1.15},
-      {label:'Website', pct:0.12, audience:'Website / landing-page viewers (dynamic retargeting)', loc:'3km for project location', type:'Reels & Creatives', mult:0.85},
-      {label:'BroadLocation', pct:0.22, audience:'People interested in property (broad targeting)', loc:'6km for project location', type:'Reels & Creatives', mult:1.15},
-    ] : [
-      {label:'LocalArea', pct:0.45, audience:'People interested in property (Advantage+ broad, age 25-55)', loc:'3km for project location', type:'Reels & Creatives', mult:1.15},
-      {label:'Lookalike', pct:0.30, audience:'Lookalike 1-3% (seeded from CRM/website converters)', loc:'6km for project location', type:'Reels & Creatives', mult:1.0},
-      {label:'Retargeting', pct:0.25, audience:'People who visited your website in past 30-90 days', loc:'6km for project location', type:'Reels/Video', mult:0.85},
-    ];
+    const structure = scaled ? INDUSTRY_CATALOGS[industry].meta.scaled : INDUSTRY_CATALOGS[industry].meta.base;
     return structure.map((c, i) => ({
       sr: i+1,
       name: `${name}_Meta_${c.label}_${monthTag()}`,
@@ -432,17 +868,10 @@
     }));
   }
 
-  function googleCampaigns(spend, blendedCpl, projectName){
+  function googleCampaigns(spend, blendedCpl, projectName, industry){
     const name = (projectName || 'PROJECT').toUpperCase();
     const scaled = spend >= 200000;
-    const structure = scaled ? [
-      {label:'SearchAction', pct:0.50, audience:'Action-oriented keywords (buy, book, price, site visit)', loc:'3km for project location', mult:1.15},
-      {label:'SearchBrand', pct:0.25, audience:'Brand + project name keywords', loc:'6km for project location', mult:0.85},
-      {label:'SearchLocation', pct:0.25, audience:'Location/landmark-based keywords', loc:'6km for project location', mult:1.0},
-    ] : [
-      {label:'SearchAction', pct:0.60, audience:'Action-oriented keywords (buy, book, price, site visit)', loc:'3km for project location', mult:1.15},
-      {label:'SearchBrand', pct:0.40, audience:'Brand + project name keywords', loc:'6km for project location', mult:0.85},
-    ];
+    const structure = scaled ? INDUSTRY_CATALOGS[industry].google.scaled : INDUSTRY_CATALOGS[industry].google.base;
     return structure.map((c, i) => ({
       sr: i+1,
       name: `${name}_Google_${c.label}_${monthTag()}`,
@@ -465,6 +894,7 @@
     const budget = parseFloat(document.getElementById('budget').value) || 0;
     const pricePoint = parseFloat(document.getElementById('pricePoint').value) || 0;
     const projectName = document.getElementById('projectName').value;
+    const industry = getSelectedIndustryKey();
 
     if (budget <= 0){
       alert('Please enter a monthly budget.');
@@ -487,6 +917,14 @@
 
     const metaResult = metaSpend > 0 ? calcMeta(metaSpend, metaCtr, metaCpm, metaConv) : null;
     const googleResult = googleSpend > 0 ? calcGoogle(googleSpend, googleCtr, googleCpc, googleConv) : null;
+
+    // Real Estate: apply Mumbai top-area CPL premium (reduces effective leads for the same spend)
+    if (industry === 'realestate'){
+      const locKey = document.getElementById('location').value;
+      const locMult = (LOCATION_MULTIPLIERS[locKey] || LOCATION_MULTIPLIERS['standard']).mult;
+      if (metaResult){ metaResult.cpl *= locMult; metaResult.leads = metaResult.spend / metaResult.cpl; }
+      if (googleResult){ googleResult.cpl *= locMult; googleResult.leads = googleResult.spend / googleResult.cpl; }
+    }
 
     const totalLeads = (metaResult ? metaResult.leads : 0) + (googleResult ? googleResult.leads : 0);
     const totalClicks = (metaResult ? metaResult.clicks : 0) + (googleResult ? googleResult.clicks : 0);
@@ -525,8 +963,8 @@
       </table>`;
 
     // Campaign structures
-    const metaCamp = metaSpend > 0 ? metaCampaigns(metaSpend, metaResult.cpl, projectName) : [];
-    const googleCamp = googleSpend > 0 ? googleCampaigns(googleSpend, googleResult.cpl, projectName) : [];
+    const metaCamp = metaSpend > 0 ? metaCampaigns(metaSpend, metaResult.cpl, projectName, industry) : [];
+    const googleCamp = googleSpend > 0 ? googleCampaigns(googleSpend, googleResult.cpl, projectName, industry) : [];
 
     document.getElementById('metaCampaignWrap').innerHTML = campaignTable(metaCamp);
     document.getElementById('googleCampaignWrap').innerHTML = campaignTable(googleCamp);
@@ -554,6 +992,101 @@
         </tr></thead>
         <tbody>${body}</tbody>
       </table>`;
+  }
+
+  // ---------- Branding / Awareness plan (universal — same CPM benchmarks for every sector) ----------
+  function generateBrandingPlan(){
+    const budget = parseFloat(document.getElementById('brandBudget').value) || 0;
+    const brandName = document.getElementById('brandName').value || 'BRAND';
+    const targetFreq = parseFloat(document.getElementById('targetFreq').value) || 3.5;
+
+    if (budget <= 0){
+      alert('Please enter a monthly budget.');
+      return;
+    }
+
+    const metaPct = parseInt(brandMetaSplit.value, 10) / 100;
+    const displayPct = parseInt(brandDisplaySplit.value, 10) / 100;
+    const youtubePct = parseInt(brandYoutubeSplit.value, 10) / 100;
+
+    const metaCpm = parseFloat(document.getElementById('brandMetaCpm').value) || 0;
+    const displayCpm = parseFloat(document.getElementById('brandDisplayCpm').value) || 0;
+    const youtubeCpm = parseFloat(document.getElementById('brandYoutubeCpm').value) || 0;
+
+    const channels = [
+      {name: 'Meta', pct: metaPct, cpm: metaCpm},
+      {name: 'Google Display', pct: displayPct, cpm: displayCpm},
+      {name: 'YouTube', pct: youtubePct, cpm: youtubeCpm},
+    ].map(c => {
+      const spend = budget * c.pct;
+      const impressions = c.cpm > 0 ? (spend / c.cpm) * 1000 : 0;
+      const reach = targetFreq > 0 ? impressions / targetFreq : 0;
+      return {...c, spend, impressions, reach};
+    });
+
+    const totalImpressions = channels.reduce((s, c) => s + c.impressions, 0);
+    const totalReach = targetFreq > 0 ? totalImpressions / targetFreq : 0;
+
+    document.getElementById('brandingSummaryGrid').innerHTML = `
+      <div class="summary-cell"><div class="label">Total budget</div><div class="value">${inr(budget)}</div></div>
+      <div class="summary-cell"><div class="label">Total impressions</div><div class="value">${num(totalImpressions)}</div></div>
+      <div class="summary-cell"><div class="label">Est. reach</div><div class="value">${num(totalReach)}</div></div>
+      <div class="summary-cell"><div class="label">Target frequency</div><div class="value">${targetFreq}x</div></div>
+    `;
+
+    const rows = channels.filter(c => c.spend > 0).map(c => `
+      <tr>
+        <td>${c.name}</td><td>${inr(c.spend)}</td><td>${inr(c.cpm)}</td>
+        <td>${num(c.impressions)}</td><td>${num(c.reach)}</td>
+      </tr>`).join('');
+    document.getElementById('brandingChannelTableWrap').innerHTML = `
+      <table class="plan-table">
+        <thead><tr><th>Channel</th><th>Budget</th><th>CPM</th><th>Impressions</th><th>Est. Reach</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+
+    document.getElementById('brandingCampaignWrap').innerHTML = brandingCampaignTable(channels, brandName);
+
+    document.getElementById('brandingResultsSection').style.display = 'block';
+    document.getElementById('brandingResultsSection').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  function brandingCampaignTable(channels, brandName){
+    const name = brandName.toUpperCase();
+    const tag = monthTag();
+    const structures = {
+      'Meta': [
+        {label: 'Reach_BroadInterest', pct: 0.55, audience: 'Broad interest targeting, reach & frequency objective', type: 'Reels & Stories'},
+        {label: 'Reach_Lookalike', pct: 0.25, audience: 'Lookalike 3-5% (seeded from CRM/website visitors)', type: 'Reels & Stories'},
+        {label: 'VideoViews', pct: 0.20, audience: 'Broad audience, video-views optimisation', type: 'Video'},
+      ],
+      'Google Display': [
+        {label: 'Display_Awareness', pct: 0.60, audience: 'Contextual + affinity audiences (broad)', type: 'Responsive Display'},
+        {label: 'Display_Remarketing', pct: 0.40, audience: 'Website visitors / past 30-90 days', type: 'Responsive Display'},
+      ],
+      'YouTube': [
+        {label: 'YT_NonSkippable', pct: 0.50, audience: 'Broad audience, 15-sec non-skippable', type: 'Non-skippable' },
+        {label: 'YT_InStream', pct: 0.50, audience: 'Broad + affinity audience, skippable in-stream', type: 'Skippable in-stream' },
+      ],
+    };
+    let out = '';
+    channels.filter(c => c.spend > 0).forEach(c => {
+      const structure = structures[c.name] || [];
+      const rows = structure.map((s, i) => `
+        <tr>
+          <td>${i+1}</td>
+          <td>${name}_${c.name.replace(/\s+/g,'')}_${s.label}_${tag}</td>
+          <td>${inr((c.spend * s.pct) / 30)}</td>
+          <td>${s.audience}</td>
+          <td>${s.type}</td>
+        </tr>`).join('');
+      out += `<h3 class="campaign-h" style="margin-top:18px;">${c.name} campaign structure</h3>
+        <table class="plan-table">
+          <thead><tr><th>Sr.</th><th>Campaign name</th><th>Daily budget</th><th>Audience</th><th>Ad type</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+    });
+    return out;
   }
 
   // ---------- Cross-sell interest form ----------
@@ -613,6 +1146,11 @@
     statusEl.className = 'form-status ok';
     document.getElementById('interestForm').reset();
   }
+  populateLocationDropdown();
+  document.getElementById('locationField').style.display =
+    (document.getElementById('sector').value === 'realestate') ? 'block' : 'none';
+  applyIndustryDefaults(); // set benchmarks/label to match the default-selected industry on load
+  applyRealEstateBracket(); // real estate starts on the lowest bracket until a price point is entered
 </script>
 
 </body>
