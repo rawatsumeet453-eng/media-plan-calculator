@@ -1074,21 +1074,21 @@
     if (metaResult){
       rows += `<tr>
         <td>Meta</td><td>${inr(metaResult.spend)}</td><td>${num(metaResult.clicks)}</td>
-        <td>${num(metaResult.impressions)}</td><td>${metaCtr}%</td><td>${inr(metaCpm)} CPM</td>
+        <td>${num(metaResult.impressions)}</td>
         <td>${num(metaResult.leads)}</td><td>${inr(metaResult.cpl)}</td>
       </tr>`;
     }
     if (googleResult){
       rows += `<tr>
         <td>Google Search</td><td>${inr(googleResult.spend)}</td><td>${num(googleResult.clicks)}</td>
-        <td>${num(googleResult.impressions)}</td><td>${googleCtr}%</td><td>${inr(googleCpc)} CPC</td>
+        <td>${num(googleResult.impressions)}</td>
         <td>${num(googleResult.leads)}</td><td>${inr(googleResult.cpl)}</td>
       </tr>`;
     }
     document.getElementById('channelTableWrap').innerHTML = `
       <table class="plan-table">
         <thead><tr>
-          <th>Channel</th><th>Budget</th><th>Clicks</th><th>Impr.</th><th>CTR</th><th>CPC/CPM</th><th>Leads</th><th>CPL</th>
+          <th>Channel</th><th>Budget</th><th>Clicks</th><th>Impr.</th><th>Leads</th><th>CPL</th>
         </tr></thead>
         <tbody>${rows}</tbody>
       </table>`;
@@ -1166,12 +1166,12 @@
 
     const rows = channels.filter(c => c.spend > 0).map(c => `
       <tr>
-        <td>${c.name}</td><td>${inr(c.spend)}</td><td>${inr(c.cpm)}</td>
+        <td>${c.name}</td><td>${inr(c.spend)}</td>
         <td>${num(c.impressions)}</td><td>${num(c.reach)}</td>
       </tr>`).join('');
     document.getElementById('brandingChannelTableWrap').innerHTML = `
       <table class="plan-table">
-        <thead><tr><th>Channel</th><th>Budget</th><th>CPM</th><th>Impressions</th><th>Est. Reach</th></tr></thead>
+        <thead><tr><th>Channel</th><th>Budget</th><th>Impressions</th><th>Est. Reach</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>`;
 
