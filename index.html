@@ -169,7 +169,10 @@
   .summary-cell .label{font-size:12px;color:var(--ink-soft);margin-bottom:6px;}
   .summary-cell .value{font-size:22px;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums;}
 
-  table.plan-table{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:10px;}
+  #channelTableWrap, #metaCampaignWrap, #googleCampaignWrap, #brandingChannelTableWrap, #brandingCampaignWrap{
+    overflow-x:auto; -webkit-overflow-scrolling:touch;
+  }
+  table.plan-table{width:100%;min-width:640px;border-collapse:collapse;font-size:14px;margin-bottom:10px;}
   table.plan-table th{
     text-align:left;
     padding:9px 10px;
@@ -264,7 +267,7 @@
 
 <header class="hero">
   <div class="hero-inner">
-    <p class="credibility">Built by a performance marketer with 5+ years in lead generation — across Real Estate, Education, and B2B</p>
+    <p class="credibility">I'm Sumeet, a performance marketing professional based in Mumbai, specialising in lead generation across Real Estate, Education, and B2B. Over the years, I've planned and managed media budgets across these industries, with a focus on building systems that make lead tracking and follow-up effortless.</p>
     <h1>Turn a budget into a costed media plan in under a minute.</h1>
     <p class="hero-sub">Set a monthly budget and channel split, get estimated clicks, leads, cost-per-lead, and a ready campaign structure — free, no signup.</p>
   </div>
@@ -277,7 +280,7 @@
 
   <section class="card">
     <p style="font-size:12.5px;color:var(--ink-soft);background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:5px;padding:10px 14px;margin:0 0 22px;">
-      Note: Numbers below are AI-generated using planning benchmarks, not your live ad account data — treat this as a starting estimate and verify against your actual Meta/Google Ads performance.
+      Note: This plan is built from my own experience and benchmarks, not your live ad account data — treat this as a starting estimate to help you understand the plan, and verify against your actual Meta/Google Ads performance.
     </p>
     <h2>Project details</h2>
     <div class="field">
@@ -428,9 +431,11 @@
       <div id="brandingCampaignWrap"></div>
 
       <div class="disclaimer">
-        These are planning estimates using flat CPM benchmarks, the same for every sector — not your live ad account
-        data. Reach is estimated as impressions ÷ target frequency, which is a simplification (real reach curves are
-        not linear). Verify against your actual Ads Manager / Google Ads data before using this for client delivery.
+        These estimates are built from my own experience and benchmarks, using flat CPM assumptions that are the same
+        for every sector — not your live ad account data. Numbers will vary from project to project and agency to
+        agency, so use this to understand the plan, not as an exact figure. Reach is estimated as impressions ÷ target
+        frequency, which is a simplification (real reach curves are not linear). Verify against your actual Ads
+        Manager / Google Ads data before using this for client delivery.
       </div>
     </div>
   </section>
@@ -449,18 +454,18 @@
       <div id="googleCampaignWrap"></div>
 
       <div class="disclaimer">
-        This media plan and campaign structure is AI-generated using planning benchmarks, not your live ad account data.
-        Numbers can be inaccurate — please cross-check against your actual Meta Ads Manager / Google Ads account
-        performance before using this for client delivery. This tool is meant to help you plan faster, not replace
-        your own account data.
+        This media plan and campaign structure is built from my own learning and experience running these campaigns —
+        it is not pulled from your live ad account data. Numbers will vary from project to project and agency to
+        agency, so treat this as a way to understand how a media plan is structured, not as a 100% accurate or final
+        figure. Please cross-check against your actual Meta Ads Manager / Google Ads account performance before using
+        this for client delivery.
       </div>
     </div>
   </section>
 
   <section class="crosssell" id="crosssell">
-    <h2>Marketer — if you're looking for a Mini CRM Sheet with CAPI, reporting, and WhatsApp automation connected together, this is exactly what I build.</h2>
-    <p>I'm Sumeet, a performance marketer with 5+ years in lead generation — mainly Real Estate, Education, and B2B.
-    A media plan is only useful once it's tracked, so I set up a Mini CRM Sheet with Meta CAPI integration, automated
+    <h2>Looking for a Mini CRM Sheet with CAPI, reporting, and WhatsApp automation connected together? This is exactly what I build.</h2>
+    <p>A media plan is only useful once it's tracked, so I set up a Mini CRM Sheet with Meta CAPI integration, automated
     WhatsApp lead follow-up, and reporting — all connected, so every lead this plan generates gets tracked, tagged,
     and followed up automatically.</p>
     <ul>
