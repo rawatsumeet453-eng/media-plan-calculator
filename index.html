@@ -1384,6 +1384,37 @@
     (document.getElementById('sector').value === 'realestate') ? 'block' : 'none';
   applyIndustryDefaults(); // set benchmarks/label to match the default-selected industry on load
   applyRealEstateBracket(); // real estate starts on the lowest bracket until a price point is entered
+
+  // ---------- Silent visit tracking (fire-and-forget, never blocks the page) ----------
+  function trackPageView(){
+    if (APPS_SCRIPT_URL.includes('PASTE_YOUR')) return;
+    try {
+      let iframe = document.getElementById('hiddenSubmitFrame');
+      if (!iframe){
+        iframe = document.createElement('iframe');
+        iframe.name = 'hiddenSubmitFrame';
+        iframe.id = 'hiddenSubmitFrame';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+      }
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = APPS_SCRIPT_URL;
+      form.target = 'hiddenSubmitFrame';
+      const fields = { type: 'page_view', timestamp: new Date().toISOString() };
+      Object.keys(fields).forEach(key => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = fields[key];
+        form.appendChild(input);
+      });
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
+    } catch (e) { /* tracking must never break the page */ }
+  }
+  trackPageView();
 </script>
 
 </body>
