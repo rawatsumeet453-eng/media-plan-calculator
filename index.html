@@ -275,7 +275,7 @@
 
 <div class="wrap">
   <p style="text-align:center;font-size:14px;color:var(--ink-soft);margin:20px 0 0;">
-    Already running ads? Get a Mini CRM Sheet with Meta CAPI, reporting, and WhatsApp automation — so every lead this plan generates gets tracked. For more details, email me at <a href="mailto:rawatsumeet453@gmail.com" style="color:var(--accent);">rawatsumeet453@gmail.com</a>.
+    Already running ads? I set up Mini CRM Sheets with Meta CAPI integration, reporting, and WhatsApp follow-up automation, so every lead this plan generates is tracked and followed up on. Write to me at <a href="mailto:rawatsumeet453@gmail.com" style="color:var(--accent);">rawatsumeet453@gmail.com</a> for details.
   </p>
 
   <section class="card">
@@ -986,14 +986,13 @@
         <td>${r.name}</td>
         <td>${inr(r.dailyBudget)}</td>
         <td>${inr(r.estCpl)}</td>
-        <td>${r.audience}</td>
         <td>${r.loc}</td>
         <td>${r.type}</td>
       </tr>`).join('');
     return `
       <table class="plan-table">
         <thead><tr>
-          <th>Sr.</th><th>Campaign name</th><th>Daily budget</th><th>Est. CPL</th><th>Audience</th><th>Location</th><th>Ad type</th>
+          <th>Sr.</th><th>Campaign name</th><th>Daily budget</th><th>Est. CPL</th><th>Location</th><th>Ad type</th>
         </tr></thead>
         <tbody>${body}</tbody>
       </table>`;
@@ -1082,12 +1081,11 @@
           <td>${i+1}</td>
           <td>${name}_${c.name.replace(/\s+/g,'')}_${s.label}_${tag}</td>
           <td>${inr((c.spend * s.pct) / 30)}</td>
-          <td>${s.audience}</td>
           <td>${s.type}</td>
         </tr>`).join('');
       out += `<h3 class="campaign-h" style="margin-top:18px;">${c.name} campaign structure</h3>
         <table class="plan-table">
-          <thead><tr><th>Sr.</th><th>Campaign name</th><th>Daily budget</th><th>Audience</th><th>Ad type</th></tr></thead>
+          <thead><tr><th>Sr.</th><th>Campaign name</th><th>Daily budget</th><th>Ad type</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>`;
     });
