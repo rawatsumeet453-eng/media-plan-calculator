@@ -4,6 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Media Plan Calculator — Real Estate Performance Marketing</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<meta name="description" content="Free costed media plan for Meta &amp; Google Ads — Real Estate, Education, and B2B. Get clicks, leads, cost-per-lead, and a ready campaign structure in under a minute.">
+
+<!-- Open Graph / LinkedIn / WhatsApp preview -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rawatsumeet453-eng.github.io/media-plan-calculator/">
+<meta property="og:title" content="Media Plan Calculator — Free for Real Estate, Education & B2B">
+<meta property="og:description" content="Turn a budget into a costed media plan in under a minute — clicks, leads, cost-per-lead, and campaign structure for Meta & Google Ads. Free, no signup.">
+<meta property="og:image" content="https://rawatsumeet453-eng.github.io/media-plan-calculator/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Media Plan Calculator — Free for Real Estate, Education & B2B">
+<meta name="twitter:description" content="Turn a budget into a costed media plan in under a minute — clicks, leads, cost-per-lead, and campaign structure for Meta & Google Ads. Free, no signup.">
+<meta name="twitter:image" content="https://rawatsumeet453-eng.github.io/media-plan-calculator/og-image.png">
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230F2A3F'/%3E%3Cpath d='M14 44 L14 30 L24 38 L34 20 L44 30 L50 22' stroke='%232F6F6B' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
   :root{
     --navy:#0F2A3F;
@@ -261,6 +280,95 @@
     .grid2{grid-template-columns:1fr;}
     .summary-grid{grid-template-columns:1fr 1fr;}
   }
+
+  .download-plan-btn{
+    display:block;
+    margin:18px auto 0;
+    padding:12px 26px;
+    background:var(--navy);
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    font-size:14.5px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .download-plan-btn:hover{background:var(--navy-deep);}
+
+  .download-modal{
+    display:none;
+    position:fixed; inset:0;
+    background:rgba(10,29,44,0.55);
+    z-index:100;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .download-modal.show{display:flex;}
+  .download-modal-inner{
+    position:relative;
+    background:var(--panel);
+    border-radius:8px;
+    padding:30px;
+    max-width:380px;
+    width:100%;
+    box-shadow:0 10px 40px rgba(0,0,0,0.25);
+  }
+  .download-modal-inner h3{
+    font-family:Georgia,"Times New Roman",serif;
+    color:var(--navy);
+    margin:0 0 8px;
+    font-size:19px;
+  }
+  .download-modal-inner p{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    margin:0 0 16px;
+  }
+  .download-modal-inner input{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:5px;
+    font-size:14px;
+    margin-bottom:6px;
+    box-sizing:border-box;
+  }
+  .download-modal-err{
+    font-size:12.5px;
+    color:#B03A2E;
+    min-height:16px;
+    margin-bottom:8px;
+  }
+  .download-modal-submit{
+    width:100%;
+    padding:11px;
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    font-size:14.5px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .download-modal-submit:hover{background:var(--navy);}
+  .download-modal-submit:disabled{opacity:0.6;cursor:not-allowed;}
+  .download-modal-status{
+    font-size:12.5px;
+    margin-top:10px;
+    text-align:center;
+  }
+  .download-modal-close{
+    position:absolute;
+    top:10px; right:14px;
+    background:none;
+    border:none;
+    font-size:22px;
+    line-height:1;
+    color:var(--ink-soft);
+    cursor:pointer;
+    padding:4px;
+  }
 </style>
 </head>
 <body>
@@ -422,46 +530,64 @@
   </section>
 
   <section class="results" id="brandingResultsSection" style="display:none;">
-    <div class="summary-grid" id="brandingSummaryGrid"></div>
-    <div class="card">
-      <h2>Per-channel branding plan</h2>
-      <div id="brandingChannelTableWrap"></div>
+    <div id="brandingCaptureArea">
+      <div class="summary-grid" id="brandingSummaryGrid"></div>
+      <div class="card">
+        <h2>Per-channel branding plan</h2>
+        <div id="brandingChannelTableWrap"></div>
 
-      <h3 class="campaign-h">Awareness campaign structure</h3>
-      <div id="brandingCampaignWrap"></div>
+        <h3 class="campaign-h">Awareness campaign structure</h3>
+        <div id="brandingCampaignWrap"></div>
 
-      <div class="disclaimer">
-        These estimates are built from my own experience and benchmarks, using flat CPM assumptions that are the same
-        for every sector — not your live ad account data. Numbers will vary from project to project and agency to
-        agency, so use this to understand the plan, not as an exact figure. Reach is estimated as impressions ÷ target
-        frequency, which is a simplification (real reach curves are not linear). Verify against your actual Ads
-        Manager / Google Ads data before using this for client delivery.
+        <div class="disclaimer">
+          These estimates are built from my own experience and benchmarks, using flat CPM assumptions that are the same
+          for every sector — not your live ad account data. Numbers will vary from project to project and agency to
+          agency, so use this to understand the plan, not as an exact figure. Reach is estimated as impressions ÷ target
+          frequency, which is a simplification (real reach curves are not linear). Verify against your actual Ads
+          Manager / Google Ads data before using this for client delivery.
+        </div>
       </div>
     </div>
+    <button type="button" class="download-plan-btn" onclick="openDownloadModal('brandingCaptureArea')">Download this plan (image)</button>
   </section>
 
   <section class="results" id="resultsSection">
-    <div class="summary-grid" id="summaryGrid"></div>
+    <div id="captureArea">
+      <div class="summary-grid" id="summaryGrid"></div>
 
-    <div class="card">
-      <h2>Per-channel media plan</h2>
-      <div id="channelTableWrap"></div>
+      <div class="card">
+        <h2>Per-channel media plan</h2>
+        <div id="channelTableWrap"></div>
 
-      <h3 class="campaign-h">Meta campaign structure</h3>
-      <div id="metaCampaignWrap"></div>
+        <h3 class="campaign-h">Meta campaign structure</h3>
+        <div id="metaCampaignWrap"></div>
 
-      <h3 class="campaign-h">Google campaign structure</h3>
-      <div id="googleCampaignWrap"></div>
+        <h3 class="campaign-h">Google campaign structure</h3>
+        <div id="googleCampaignWrap"></div>
 
-      <div class="disclaimer">
-        This media plan and campaign structure is built from my own learning and experience running these campaigns —
-        it is not pulled from your live ad account data. Numbers will vary from project to project and agency to
-        agency, so treat this as a way to understand how a media plan is structured, not as a 100% accurate or final
-        figure. Please cross-check against your actual Meta Ads Manager / Google Ads account performance before using
-        this for client delivery.
+        <div class="disclaimer">
+          This media plan and campaign structure is built from my own learning and experience running these campaigns —
+          it is not pulled from your live ad account data. Numbers will vary from project to project and agency to
+          agency, so treat this as a way to understand how a media plan is structured, not as a 100% accurate or final
+          figure. Please cross-check against your actual Meta Ads Manager / Google Ads account performance before using
+          this for client delivery.
+        </div>
       </div>
     </div>
+    <button type="button" class="download-plan-btn" onclick="openDownloadModal('captureArea')">Download this plan (image)</button>
   </section>
+
+  <div class="download-modal" id="downloadModal">
+    <div class="download-modal-inner">
+      <button type="button" class="download-modal-close" onclick="closeDownloadModal()" aria-label="Close">&times;</button>
+      <h3>Download your media plan</h3>
+      <p>Enter your email and I'll send you this exact plan as an image you can keep or share.</p>
+      <input type="email" id="downloadEmail" placeholder="you@example.com" required>
+      <div class="download-modal-err" id="downloadEmailErr"></div>
+      <button type="button" class="download-modal-submit" id="downloadSubmitBtn" onclick="confirmDownload()">Download</button>
+      <div class="download-modal-status" id="downloadStatus"></div>
+    </div>
+  </div>
 
   <section class="crosssell" id="crosssell">
     <h2>Looking for a Mini CRM Sheet with CAPI, reporting, and WhatsApp automation connected together? This is exactly what I build.</h2>
@@ -1096,13 +1222,117 @@
   // Replace this with your deployed Google Apps Script Web App URL (see Code.gs)
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyuXdcsDpnD-vIZRLZab5LJU7EMKs39Tx7ypDEn30quAI9v2b9mlO9UeM3gIk9qESCvKw/exec";
 
+  // ---------- Download plan as image (email-gated) ----------
+  let downloadTargetId = null;
+
+  function openDownloadModal(targetId){
+    downloadTargetId = targetId;
+    document.getElementById('downloadEmail').value = '';
+    document.getElementById('downloadEmailErr').textContent = '';
+    document.getElementById('downloadStatus').textContent = '';
+    document.getElementById('downloadSubmitBtn').disabled = false;
+    document.getElementById('downloadSubmitBtn').textContent = 'Download';
+    document.getElementById('downloadModal').classList.add('show');
+  }
+
+  function closeDownloadModal(){
+    document.getElementById('downloadModal').classList.remove('show');
+    downloadTargetId = null;
+  }
+
+  function sendPlanDownloadLead(email){
+    if (APPS_SCRIPT_URL.includes('PASTE_YOUR')) return;
+    const isRealEstate = downloadTargetId === 'captureArea';
+    const sector = isRealEstate
+      ? (document.getElementById('sector') ? document.getElementById('sector').value : '')
+      : 'branding';
+    const budgetEl = isRealEstate ? document.getElementById('budget') : document.getElementById('brandBudget');
+    const budget = budgetEl ? budgetEl.value : '';
+
+    let iframe = document.getElementById('hiddenSubmitFrame');
+    if (!iframe){
+      iframe = document.createElement('iframe');
+      iframe.name = 'hiddenSubmitFrame';
+      iframe.id = 'hiddenSubmitFrame';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+    }
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = APPS_SCRIPT_URL;
+    form.target = 'hiddenSubmitFrame';
+    const fields = { type: 'plan_download', email, sector, budget, timestamp: new Date().toISOString() };
+    Object.keys(fields).forEach(key => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = fields[key];
+      form.appendChild(input);
+    });
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+  }
+
+  function confirmDownload(){
+    const emailEl = document.getElementById('downloadEmail');
+    const email = emailEl.value.trim();
+    const errEl = document.getElementById('downloadEmailErr');
+    const statusEl = document.getElementById('downloadStatus');
+    const btn = document.getElementById('downloadSubmitBtn');
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+      errEl.textContent = 'Please enter a valid email address.';
+      return;
+    }
+    errEl.textContent = '';
+
+    if (typeof html2canvas === 'undefined'){
+      statusEl.textContent = 'Could not load image library — check your internet connection and try again.';
+      return;
+    }
+
+    const target = document.getElementById(downloadTargetId);
+    if (!target){
+      statusEl.textContent = 'Nothing to download yet — generate a plan first.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Preparing image...';
+    statusEl.textContent = '';
+
+    html2canvas(target, {backgroundColor: '#F6F4EF', scale: 2}).then(canvas => {
+      sendPlanDownloadLead(email);
+      const link = document.createElement('a');
+      link.download = 'media-plan.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      statusEl.textContent = 'Downloaded! Check your downloads folder.';
+      btn.disabled = false;
+      btn.textContent = 'Download';
+      setTimeout(closeDownloadModal, 1200);
+    }).catch(() => {
+      statusEl.textContent = 'Something went wrong generating the image — please try again.';
+      btn.disabled = false;
+      btn.textContent = 'Download';
+    });
+  }
+
   function submitInterest(e){
     e.preventDefault();
     const statusEl = document.getElementById('formStatus');
     const name = document.getElementById('intName').value;
     const email = document.getElementById('intEmail').value;
-    const phone = document.getElementById('intPhone').value;
+    const phone = document.getElementById('intPhone').value.trim();
     const note = document.getElementById('intNote').value;
+
+    const phoneDigits = phone.replace(/\D/g, '').slice(-10);
+    if (!/^[6-9]\d{9}$/.test(phoneDigits)){
+      statusEl.textContent = 'Please enter a valid 10-digit mobile number.';
+      statusEl.className = 'form-status err';
+      return;
+    }
 
     if (APPS_SCRIPT_URL.includes('PASTE_YOUR')){
       statusEl.textContent = 'Form not connected yet — add your Apps Script URL in the code.';
